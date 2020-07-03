@@ -23,28 +23,48 @@ class Scoreboard extends React.Component {
     console.log(scores);
     this.setState({'scores':scores});
   }
+
+  epochToDate(epoch) { 
+    let aDate = new Date(0);
+    aDate.setUTCSeconds(epoch)
+    return aDate.toLocaleDateString();
+  }
   
+
   render() {
     return this.state === null ? (
             <p>Empty list</p>
         )
         :
         (
-            <table>
+            <div className="Scoreboard">
+            <h1>Your scoreboard</h1>
+            <table className="ScoreTable">
+
+            <thead>
+                <tr className="ScoreTable-Header">
+                <th>Multiply</th>
+                <th>Record (sec)</th>
+                <th>Errors</th>
+                <th>When</th>
+                </tr>
+            </thead>
+            
             <tbody>
             {this.state.scores.map(score => {
                     return (
-                        <tr key={score.multiply}>
-                            <td>{score.multiply}</td> 
+                        <tr key={score.multiply} className="ScoreTable-Row">
+                            <td><b>{score.multiply}</b></td> 
                             <td>{score.duration}</td> 
                             <td>{score.errors}</td> 
-                            <td>{score.when}</td> 
+                            <td>{this.epochToDate(score.when)}</td> 
                         </tr>
                     )
                 } )
             }
             </tbody>
             </table> 
+            </div>
     );
   }
 

@@ -37,6 +37,28 @@
   color: #61dafb;
 }
 
+.Scoreboard {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.ScoreTable {
+  width: 80%;
+  padding: 15px;
+  text-align: center;
+  border: 1px solid black
+} 
+
+.ScoreTable-Header {
+  height: 40px;
+}
+
+.ScoreTable-Row {
+  height: 30px;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

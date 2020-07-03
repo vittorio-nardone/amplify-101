@@ -26,7 +26,6 @@ const App = () => {
       </header>
 
       <div className="App-body">
-        <p>This is a test</p>
         <Scoreboard/>
       </div>
     </div>
