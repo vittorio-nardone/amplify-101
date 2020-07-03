@@ -1,0 +1,5 @@
+{
+    "tableName": "scoreboard",
+    "partitionKeyName": "username",
+    "partitionKeyType": "S"
+}

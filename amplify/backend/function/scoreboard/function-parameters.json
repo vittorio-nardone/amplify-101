@@ -1,0 +1,9 @@
+{
+    "permissions": {
+        "storage": {
+            "scoreboard": [
+                "read"
+            ]
+        }
+    }
+}

@@ -1,0 +1,10 @@
+type score {
+  multiply: Int!
+  errors: Int!
+  duration: Int!
+  when: AWSTimestamp!
+}
+
+type Query {
+    getScores: [score] @function(name: "scoreboard-${env}")
+}
