@@ -5,6 +5,13 @@ type score {
   when: AWSTimestamp!
 }
 
+type challenge {
+  id: String!
+  multiply: Int!
+  challenge: [Int]!
+}
+
 type Query {
     getScores: [score] @function(name: "scoreboard-${env}")
+    getChallenge: challenge @function(name: "newChallenge-${env}")
 }

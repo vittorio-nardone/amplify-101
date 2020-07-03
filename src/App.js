@@ -1,59 +1,84 @@
 import React from 'react';
-import logo from './logo.svg';
+import logo, { ReactComponent } from './logo.svg';
 import './App.css';
 import { AmplifyAuthenticator, AmplifySignOut, AmplifySignUp, AmplifySignIn } from '@aws-amplify/ui-react';
-import { AuthState, onAuthUIStateChange } from '@aws-amplify/ui-components';
 import Scoreboard from './Scoreboard'
 
-const App = () => {
-  const [authState, setAuthState] = React.useState();
-  const [user, setUser] = React.useState();
+import { getChallenge }  from './graphql/queries';
+import { API, graphqlOperation } from "aws-amplify";
 
-  React.useEffect(() => {
-    return onAuthUIStateChange((nextAuthState, authData) => {
-        setAuthState(nextAuthState);
-        setUser(authData)
-    });
-  }, []);
+class App extends React.Component {
+  
+  constructor() {
+    super();
+    this.state = {
+      authState: null,
+      user: null,
+      challenge: null
+    }
+  }
 
-  return authState === AuthState.SignedIn && user ? (
-    
-    <div className="App">
-      <header className="App-header">
-        <p className="App-header-contents"><b>Amplify 101 - Learn math!</b></p>
-        <p><b>User:</b> {user.username}</p>
-        <AmplifySignOut className="App-header-contents"/>  
-      </header>
+  async newChallenge() {
+    const data = await API.graphql(graphqlOperation(getChallenge));
+    console.log(data)
+    this.setState({challenge: data.data.getChallenge})
+  }
 
-      <div className="App-body">
-        <Scoreboard/>
+  render() {
+    console.log(this.props.authState)
+    return this.state.authState === 'signedin' ? (
+      
+      <div className="App">
+        <header className="App-header">
+          <p className="App-header-contents"><b>Amplify 101 - Learn math!</b></p>
+          <p><b>User:</b> {this.state.user.username}</p>
+          <AmplifySignOut className="App-header-contents"/>  
+        </header>
+        
+        {this.state.challenge === null ? (
+          <div className="App-body"><Scoreboard/>
+          <button onClick={() => this.newChallenge()}>
+              New Challenge!
+          </button>
+          </div>
+        ) : (
+          <div className="App-body">
+          <p>ciao</p>
+          </div>
+        )}
+        
       </div>
-    </div>
-  ) : (
-    <div className="App">
-      <header className="App-header">
-        <p className="App-header-contents"><b>Amplify 101 - Learn math!</b></p>
-      </header>
-      <AmplifyAuthenticator usernameAlias="email">
-      <AmplifySignUp
-        slot="sign-up"
-        usernameAlias="email"
-        formFields={[
-          {
-            type: "email",
-            required: true,
-          },
-          {
-            type: "password",
-            required: true,
-          },
-        ]} 
-      />
-      <AmplifySignIn slot="sign-in" usernameAlias="email" />
-      </AmplifyAuthenticator>
-      </div>
-    )
-    
+    ) : (
+      <div className="App">
+        <header className="App-header">
+          <p className="App-header-contents"><b>Amplify 101 - Learn math!</b></p>
+        </header>
+        <AmplifyAuthenticator 
+            usernameAlias="email" 
+            handleAuthStateChange={(state, data) => {
+                console.log(state)
+                console.log(data)
+                this.setState({authState: state, user: data})
+            }}>
+        <AmplifySignUp
+          slot="sign-up"
+          usernameAlias="email"
+          formFields={[
+            {
+              type: "email",
+              required: true,
+            },
+            {
+              type: "password",
+              required: true,
+            },
+          ]} 
+        />
+        <AmplifySignIn slot="sign-in" usernameAlias="email" />
+        </AmplifyAuthenticator>
+        </div>
+      )
+    }
 }
 
 export default App;

@@ -10,6 +10,14 @@
 		"env": {
 			"Type": "String"
 		},
+		"storagechallengesName": {
+			"Type": "String",
+			"Default": "storagechallengesName"
+		},
+		"storagechallengesArn": {
+			"Type": "String",
+			"Default": "storagechallengesArn"
+		},
 		"storagescoreboardName": {
 			"Type": "String",
 			"Default": "storagescoreboardName"
@@ -41,12 +49,12 @@
 				"FunctionName": {
 					"Fn::If": [
 						"ShouldNotCreateEnvResources",
-						"scoreboard",
+						"newChallenge",
 						{
 							"Fn::Join": [
 								"",
 								[
-									"scoreboard",
+									"newChallenge",
 									"-",
 									{
 										"Ref": "env"
@@ -63,6 +71,12 @@
 						},
 						"REGION": {
 							"Ref": "AWS::Region"
+						},
+						"STORAGE_CHALLENGES_NAME": {
+							"Ref": "storagechallengesName"
+						},
+						"STORAGE_CHALLENGES_ARN": {
+							"Ref": "storagechallengesArn"
 						},
 						"STORAGE_SCOREBOARD_NAME": {
 							"Ref": "storagescoreboardName"
@@ -82,7 +96,7 @@
 				"Timeout": "25",
 				"Code": {
 					"S3Bucket": "amplify-amplify101-dev-111033-deployment",
-					"S3Key": "amplify-builds/scoreboard-454d30736e6a53517659-build.zip"
+					"S3Key": "amplify-builds/newChallenge-52704952352b56757874-build.zip"
 				}
 			}
 		},
@@ -92,12 +106,12 @@
 				"RoleName": {
 					"Fn::If": [
 						"ShouldNotCreateEnvResources",
-						"amplify101LambdaRole08312f48",
+						"amplify101LambdaRole8f733fbd",
 						{
 							"Fn::Join": [
 								"",
 								[
-									"amplify101LambdaRole08312f48",
+									"amplify101LambdaRole8f733fbd",
 									"-",
 									{
 										"Ref": "env"
@@ -203,6 +217,30 @@
 										[
 											{
 												"Ref": "storagescoreboardArn"
+											},
+											"index/*"
+										]
+									]
+								}
+							]
+						},
+						{
+							"Effect": "Allow",
+							"Action": [
+								"dynamodb:Put*",
+								"dynamodb:Create*",
+								"dynamodb:BatchWriteItem"
+							],
+							"Resource": [
+								{
+									"Ref": "storagechallengesArn"
+								},
+								{
+									"Fn::Join": [
+										"/",
+										[
+											{
+												"Ref": "storagechallengesArn"
 											},
 											"index/*"
 										]

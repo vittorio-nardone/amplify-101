@@ -1,0 +1,12 @@
+{
+    "permissions": {
+        "storage": {
+            "scoreboard": [
+                "read"
+            ],
+            "challenges": [
+                "create"
+            ]
+        }
+    }
+}

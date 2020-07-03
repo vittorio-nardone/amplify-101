@@ -11,3 +11,12 @@ export const getScores = /* GraphQL */ `
     }
   }
 `;
+export const getChallenge = /* GraphQL */ `
+  query GetChallenge {
+    getChallenge {
+      id
+      multiply
+      challenge
+    }
+  }
+`;

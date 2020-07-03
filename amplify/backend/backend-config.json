@@ -11,6 +11,10 @@
         "scoreboard": {
             "service": "DynamoDB",
             "providerPlugin": "awscloudformation"
+        },
+        "challenges": {
+            "service": "DynamoDB",
+            "providerPlugin": "awscloudformation"
         }
     },
     "api": {
@@ -39,6 +43,29 @@
                 {
                     "category": "storage",
                     "resourceName": "scoreboard",
+                    "attributes": [
+                        "Name",
+                        "Arn"
+                    ]
+                }
+            ]
+        },
+        "newChallenge": {
+            "build": true,
+            "providerPlugin": "awscloudformation",
+            "service": "Lambda",
+            "dependsOn": [
+                {
+                    "category": "storage",
+                    "resourceName": "scoreboard",
+                    "attributes": [
+                        "Name",
+                        "Arn"
+                    ]
+                },
+                {
+                    "category": "storage",
+                    "resourceName": "challenges",
                     "attributes": [
                         "Name",
                         "Arn"
