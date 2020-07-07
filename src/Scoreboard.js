@@ -43,7 +43,7 @@ class Scoreboard extends React.Component {
 
             <thead>
                 <tr className="ScoreTable-Header">
-                <th>Tabel of</th>
+                <th>Table of</th>
                 <th>Record (sec)</th>
                 <th>Errors</th>
                 <th>When</th>
