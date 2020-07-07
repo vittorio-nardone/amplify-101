@@ -33,7 +33,7 @@ class Scoreboard extends React.Component {
 
   render() {
     return this.state === null ? (
-            <p>Empty list</p>
+            <p><i>..loading scoreboard..</i></p>
         )
         :
         (
@@ -43,7 +43,7 @@ class Scoreboard extends React.Component {
 
             <thead>
                 <tr className="ScoreTable-Header">
-                <th>Multiply</th>
+                <th>Tabel of</th>
                 <th>Record (sec)</th>
                 <th>Errors</th>
                 <th>When</th>

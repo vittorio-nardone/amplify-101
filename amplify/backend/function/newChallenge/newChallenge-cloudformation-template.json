@@ -96,7 +96,7 @@
 				"Timeout": "25",
 				"Code": {
 					"S3Bucket": "amplify-amplify101-dev-111033-deployment",
-					"S3Key": "amplify-builds/newChallenge-52704952352b56757874-build.zip"
+					"S3Key": "amplify-builds/newChallenge-616a692f597a51757656-build.zip"
 				}
 			}
 		},
@@ -200,12 +200,17 @@
 						{
 							"Effect": "Allow",
 							"Action": [
+								"dynamodb:Put*",
+								"dynamodb:Create*",
+								"dynamodb:BatchWriteItem",
 								"dynamodb:Get*",
 								"dynamodb:BatchGetItem",
 								"dynamodb:List*",
 								"dynamodb:Describe*",
 								"dynamodb:Scan",
-								"dynamodb:Query"
+								"dynamodb:Query",
+								"dynamodb:Update*",
+								"dynamodb:RestoreTable*"
 							],
 							"Resource": [
 								{
@@ -229,7 +234,16 @@
 							"Action": [
 								"dynamodb:Put*",
 								"dynamodb:Create*",
-								"dynamodb:BatchWriteItem"
+								"dynamodb:BatchWriteItem",
+								"dynamodb:Get*",
+								"dynamodb:BatchGetItem",
+								"dynamodb:List*",
+								"dynamodb:Describe*",
+								"dynamodb:Scan",
+								"dynamodb:Query",
+								"dynamodb:Update*",
+								"dynamodb:RestoreTable*",
+								"dynamodb:Delete*"
 							],
 							"Resource": [
 								{

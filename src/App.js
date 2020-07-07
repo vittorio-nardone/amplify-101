@@ -1,8 +1,8 @@
 import React from 'react';
-import logo, { ReactComponent } from './logo.svg';
 import './App.css';
 import { AmplifyAuthenticator, AmplifySignOut, AmplifySignUp, AmplifySignIn } from '@aws-amplify/ui-react';
 import Scoreboard from './Scoreboard'
+import Challenge from './Challenge'
 
 import { getChallenge }  from './graphql/queries';
 import { API, graphqlOperation } from "aws-amplify";
@@ -16,12 +16,20 @@ class App extends React.Component {
       user: null,
       challenge: null
     }
+
+    this.resetChallenge = this.resetChallenge.bind(this)
   }
 
   async newChallenge() {
     const data = await API.graphql(graphqlOperation(getChallenge));
     console.log(data)
     this.setState({challenge: data.data.getChallenge})
+  }
+
+  resetChallenge() {
+    this.setState({
+      challenge: null
+    })
   }
 
   render() {
@@ -37,13 +45,15 @@ class App extends React.Component {
         
         {this.state.challenge === null ? (
           <div className="App-body"><Scoreboard/>
+          <p>
           <button onClick={() => this.newChallenge()}>
               New Challenge!
           </button>
+          </p>
           </div>
         ) : (
           <div className="App-body">
-          <p>ciao</p>
+            <Challenge challenge={this.state.challenge} onFinish={this.resetChallenge} />
           </div>
         )}
         

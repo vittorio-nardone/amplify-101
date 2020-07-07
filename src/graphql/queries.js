@@ -8,6 +8,7 @@ export const getScores = /* GraphQL */ `
       errors
       duration
       when
+      pb
     }
   }
 `;

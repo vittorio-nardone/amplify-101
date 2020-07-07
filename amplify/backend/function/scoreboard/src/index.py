@@ -2,10 +2,10 @@ import boto3
 from botocore.exceptions import ClientError
 import os
 import json
+import decimal
 
 dynamodb = boto3.resource('dynamodb')
 scoreboard = dynamodb.Table(os.environ['STORAGE_SCOREBOARD_NAME'])
-
 
 def get_scoreboard(username):
   try:
@@ -16,8 +16,27 @@ def get_scoreboard(username):
     print('Dynamodb response:')
     print(response)
     if 'Item' in response:
-      return json.loads(response['Item']['results'])
+      return replace_decimals(response['Item']['results'])
     
+# Helper class to Decimals in an arbitrary object
+def replace_decimals(obj):
+    if isinstance(obj, list):
+        for i in range(len(obj)):
+            obj[i] = replace_decimals(obj[i])
+        return obj
+    elif isinstance(obj, dict):
+        for k, v in obj.items():
+            obj[k] = replace_decimals(v)
+        return obj
+    elif isinstance(obj, set):
+        return set(replace_decimals(i) for i in obj)
+    elif isinstance(obj, decimal.Decimal):
+        if obj % 1 == 0:
+            return int(obj)
+        else:
+            return float(obj)
+    else:
+        return obj
 
 def handler(event, context):
   print('Received event:')
@@ -31,7 +50,7 @@ def handler(event, context):
       if scoreboard:
         print('Scoreboard:')
         print(scoreboard)
-        for m in scoreboard.keys():
+        for m in sorted(scoreboard.keys(), key=lambda item: int(item)):
           record = {
               'multiply': m, 
               'duration': scoreboard[m]['duration'],

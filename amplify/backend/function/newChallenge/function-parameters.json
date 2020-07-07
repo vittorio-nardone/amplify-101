@@ -2,10 +2,15 @@
     "permissions": {
         "storage": {
             "scoreboard": [
-                "read"
+                "create",
+                "read",
+                "update"
             ],
             "challenges": [
-                "create"
+                "create",
+                "read",
+                "update",
+                "delete"
             ]
         }
     }
