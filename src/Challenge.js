@@ -12,9 +12,14 @@ class Challenge extends React.Component {
     this.state = {'score': null, 'results': results, 'loadingResults': false};
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.handleClick = this.handleClick.bind(this)
   }
 
   handleSubmit(event) {
+    event.preventDefault();
+  }
+
+  handleClick() {
     this.setState({'loadingResults': true})
 
     // mutation
@@ -25,9 +30,8 @@ class Challenge extends React.Component {
         console.log({ data });
         this.setState({'score': data.data.sendChallengeResults});
       })
-      .catch(err => console.log('error: ', err))
-    event.preventDefault();
-  }
+      .catch(err => console.log('error: ', err));
+  } 
 
   handleChange(value, index){
     let results = this.state.results;
@@ -74,7 +78,7 @@ class Challenge extends React.Component {
             </tbody>
             
             </table> 
-            <p><input disabled={this.state.loadingResults} className="App-buttons"  type="submit" value={this.state.loadingResults ? "...checking..." : "SUBMIT"}/></p>
+            <p><button disabled={this.state.loadingResults} className="App-buttons"  onClick={this.handleClick}>{this.state.loadingResults ? "...checking..." : "SUBMIT"}</button></p>
             </form>
             </div>
     );
