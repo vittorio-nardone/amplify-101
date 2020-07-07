@@ -14,13 +14,15 @@ class App extends React.Component {
     this.state = {
       authState: null,
       user: null,
-      challenge: null
+      challenge: null,
+      loadingChallenge: false,
     }
 
     this.resetChallenge = this.resetChallenge.bind(this)
   }
 
   async newChallenge() {
+    this.setState({loadingChallenge: true});
     const data = await API.graphql(graphqlOperation(getChallenge));
     console.log(data)
     this.setState({challenge: data.data.getChallenge})
@@ -28,7 +30,8 @@ class App extends React.Component {
 
   resetChallenge() {
     this.setState({
-      challenge: null
+      challenge: null,
+      loadingChallenge: false
     })
   }
 
@@ -46,8 +49,8 @@ class App extends React.Component {
         {this.state.challenge === null ? (
           <div className="App-body"><Scoreboard/>
           <p>
-          <button onClick={() => this.newChallenge()}>
-              New Challenge!
+          <button class="App-buttons" disabled={this.state.loadingChallenge} onClick={() => this.newChallenge() }>
+              {this.state.loadingChallenge ? "...generating..." : "NEW CHALLENGE!"}
           </button>
           </p>
           </div>

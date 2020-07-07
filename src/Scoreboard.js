@@ -33,7 +33,10 @@ class Scoreboard extends React.Component {
 
   render() {
     return this.state === null ? (
+            <div className="Scoreboard">
+            <h1>Your scoreboard</h1>
             <p><i>..loading scoreboard..</i></p>
+            </div>
         )
         :
         (

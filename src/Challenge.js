@@ -9,12 +9,14 @@ class Challenge extends React.Component {
   constructor(props) {
     super(props);
     let results = new Array(props.challenge.challenge.length).fill(0);
-    this.state = {'score': null, 'results': results};
+    this.state = {'score': null, 'results': results, 'loadingResults': false};
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
   }
 
   handleSubmit(event) {
+    this.setState({'loadingResults': true})
+
     // mutation
     const challenge_result = { id: this.props.challenge.id, results: this.state.results }
 
@@ -41,7 +43,7 @@ class Challenge extends React.Component {
               <div> <img src={pb} alt="pb" height="200px"/><h1>Congratulation!</h1> <p>It's your new personal best!</p></div>
             ) : (<p><h1>Results</h1>Hmm, not your best.</p>)}           
             <p>You did it in <b>{this.state.score.duration}</b> seconds and <b>{this.state.score.errors}</b> error(s).</p>
-            <button onClick = {this.props.onFinish}>back to scoreboard</button>
+            <button className="App-buttons" onClick = {this.props.onFinish}>BACK</button>
             </div>
       )
     : (
@@ -72,7 +74,7 @@ class Challenge extends React.Component {
             </tbody>
             
             </table> 
-            <p><input type="submit" value="Submit your results" /></p>
+            <p><input disabled={this.state.loadingResults} className="App-buttons"  type="submit" value={this.state.loadingResults ? "...checking..." : "SUBMIT"}/></p>
             </form>
             </div>
     );
