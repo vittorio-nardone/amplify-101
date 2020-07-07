@@ -41,8 +41,10 @@ class App extends React.Component {
       
       <div className="App">
         <header className="App-header">
-          <p className="App-header-contents"><b>Amplify 101 - Learn math!</b></p>
-          <p><b>User:</b> {this.state.user.username}</p>
+          <div className="App-header-contents">
+          <b>Amplify 101 - Learn math!</b></div>
+          <div className="App-header-contents App-header-user"><b>User:</b> {this.state.user.username}</div>
+          
           <AmplifySignOut className="App-header-contents"/>  
         </header>
         
@@ -50,7 +52,7 @@ class App extends React.Component {
           <div className="App-body"><Scoreboard/>
           <p>
           <button class="App-buttons" disabled={this.state.loadingChallenge} onClick={() => this.newChallenge() }>
-              {this.state.loadingChallenge ? "...generating..." : "NEW CHALLENGE!"}
+              {this.state.loadingChallenge ? "...generating..." : "NEW Challenge!"}
           </button>
           </p>
           </div>
