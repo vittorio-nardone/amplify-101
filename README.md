@@ -29,12 +29,13 @@ Amplify can't find Python3.8 on build phase of CI/CD using default build image. 
 
 ### Typical Docker tasks
 
-> # Pull from Docker Hub
-> docker pull vnardone/amplify-python38:latest
-> # Run image
-> docker run -it vnardone/amplify-python38 bash
->
-> # Use as base image
-> FROM vnardone/amplify-python38:latest
+```
+# Pull from Docker Hub
+docker pull vnardone/amplify-python38:latest
+# Run image
+docker run -it vnardone/amplify-python38 bash
 
+# Use as base image
+FROM vnardone/amplify-python38:latest
+```
 
