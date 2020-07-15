@@ -1,6 +1,7 @@
 version: 1
 backend:
   phases:
+    ## Use it with default build image only. Long process.
     # preBuild:
     #   commands:
     #     - export BASE_PATH=$(pwd)
