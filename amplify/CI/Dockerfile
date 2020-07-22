@@ -12,8 +12,17 @@ RUN yum -y install \
     libffi-devel \
     make \
     sudo \
-    tar \
-    Xvfb
+    tar 
+
+RUN yum -y install \
+    xorg-x11-server-Xvfb \
+    gtk2-devel \
+    gtk3-devel \
+    libnotify-devel \
+    GConf2 \
+    nss \
+    libXScrnSaver \ 
+    alsa-lib
 
 RUN curl -sL https://rpm.nodesource.com/setup_12.x | sudo -E bash -
 RUN sudo yum install -y nodejs
