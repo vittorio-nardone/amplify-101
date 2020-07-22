@@ -38,13 +38,29 @@ function SignIn() {
 
 };
 
+function setResult(i, multiply) {
+        var guess = multiply[0].textContent;
+        var x = guess.indexOf("x");
+        var a = guess.substr(0,2);
+        var b = guess.substr(x+1,3);
+        cy.get(':nth-child(' + String(i) + ') > :nth-child(2) > input').type(String(a*b));
+    }
+
+function setWrongResult(i, multiply) {
+        var guess = multiply[0].textContent;
+        var x = guess.indexOf("x");
+        var a = guess.substr(0,2);
+        var b = guess.substr(x+1,3);
+        cy.get(':nth-child(' + String(i) + ') > :nth-child(2) > input').type(String(a*b+1));
+    }
+
 describe('Authenticator:', function() {
     // Step 1: setup the application state
     beforeEach(function() {
       cy.visit('/');
     });
     
-    describe('Sign In:', () => {
+    describe('Sign In', () => {
       it('allows a user to signin', () => {
         // Step 2: Take an action (Sign in)
         SignIn();
@@ -54,7 +70,7 @@ describe('Authenticator:', function() {
       });
     });
 
-    describe('Sign Out:', () => {
+    describe('Sign Out', () => {
         it('allows a user to signout', () => {
           // Step 2: Take an action (Sign in)
           SignIn();
@@ -102,22 +118,6 @@ describe('Authenticator:', function() {
         cy.contains(selectors.scoreboard);
       });   
 
-    function setResult(i, multiply) {
-        var guess = multiply[0].textContent;
-        var x = guess.indexOf("x");
-        var a = guess.substr(0,2);
-        var b = guess.substr(x+1,3);
-        cy.get(':nth-child(' + String(i) + ') > :nth-child(2) > input').type(String(a*b));
-    }
-
-    function setWrongResult(i, multiply) {
-        var guess = multiply[0].textContent;
-        var x = guess.indexOf("x");
-        var a = guess.substr(0,2);
-        var b = guess.substr(x+1,3);
-        cy.get(':nth-child(' + String(i) + ') > :nth-child(2) > input').type(String(a*b+1));
-    }
-
       it('fill a perfect challenge', () => {
         cy.contains(selectors.newChallenge).click();
         cy.contains(selectors.submitChallenge);
@@ -157,7 +157,94 @@ describe('Authenticator:', function() {
     });
  
   });
-  
-  
 
-  
+  describe('Scoreboard:', function() {
+
+    // Step 1: setup the application state
+    beforeEach(function() {
+      cy.visit('/');
+      // Step 2: Take an action (Sign in)
+      SignIn();
+
+      // Step 3: Make an assertion (Check for sign-out text)
+      cy.get(selectors.signOutButton, { includeShadowDom: true, timeout: 10000 }).contains('Sign Out');        
+
+    });
+
+    describe('Check Scoreboard', () => {
+      it('check if scoreboard is shown', () => {
+        
+        cy.contains('Table of'); 
+        cy.contains('Record (sec)'); 
+        cy.contains('Errors');
+        cy.contains('When');
+      });
+
+      it('check if reset scoreboard is shown', () => {
+        cy.get('.ScoreTable').then(($table) => {
+            if ($table.find('tr').length < 2) {
+              cy.contains(selectors.newChallenge).click();
+              cy.contains(selectors.submitChallenge).click();
+              cy.contains(selectors.backToScoreboard).click();
+              cy.contains(selectors.scoreboard);
+            }
+            cy.contains('RESET SCOREBOARD');
+        }) 
+      });
+
+      it('check if reset scoreboard is doing the right job', () => {
+        cy.get('.ScoreTable').then(($table) => {
+            if ($table.find('tr').length < 2) {
+              cy.contains(selectors.newChallenge).click();
+              cy.contains(selectors.submitChallenge).click();
+              cy.contains(selectors.backToScoreboard).click();
+              cy.contains(selectors.scoreboard);
+            }  
+           
+            cy.contains('RESET SCOREBOARD')
+              .click()
+              .then(() => {
+                cy.wait(2000);
+                cy.get('.ScoreTable').then(($table) => {
+                  expect($table.find('tr').length).to.equal(1);
+                }) 
+              });
+        }) 
+
+      });
+
+    });
+
+  });
+
+    describe('Results:', function() {
+
+    // Step 1: setup the application state
+    beforeEach(function() {
+      cy.visit('/');
+      // Step 2: Take an action (Sign in)
+      SignIn();
+
+      // Step 3: Make an assertion (Check for sign-out text)
+      cy.get(selectors.signOutButton, { includeShadowDom: true, timeout: 10000 }).contains('Sign Out');        
+
+    });
+
+    describe('Check Results', () => {
+      it('check if congratulations is showN', () => {
+          cy.get('.ScoreTable').then(($table) => {
+              if ($table.find('tr').length > 1) {
+                cy.contains('RESET SCOREBOARD')
+                .click()
+                .then(() => {
+                  cy.wait(2000);
+                });
+              }
+                
+              cy.contains(selectors.newChallenge).click();
+              cy.contains(selectors.submitChallenge).click();
+              cy.contains('Congratulation!');
+          });
+      });
+    });
+  });
