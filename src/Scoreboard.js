@@ -77,7 +77,7 @@ class Scoreboard extends React.Component {
             </tbody>
             </table> 
             {this.state.scores.length > 0 ? (
-            <pre><a href="#" onClick={this.resetClick}>RESET SCOREBOARD</a></pre>
+            <pre><a href="!#" onClick={this.resetClick}>RESET SCOREBOARD</a></pre>
             ) : ( "" )}
             </div>
     );
