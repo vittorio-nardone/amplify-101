@@ -25,13 +25,17 @@ class Scoreboard extends React.Component {
     this.setState({'scores':scores});
   }
 
-  resetClick() {
+  resetClick(e) {
+    e.preventDefault();
+      
     API.graphql(graphqlOperation(resetScores, null))
       .then(data => {
         console.log({ data });
         this.setState({'scores':[]});
       })
       .catch(err => console.log('error: ', err));
+
+    return false
   }
 
   epochToDate(epoch) { 
