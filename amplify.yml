@@ -33,3 +33,21 @@ frontend:
   cache:
     paths:
       - node_modules/**/*
+
+test:
+  artifacts:
+    baseDirectory: cypress
+    configFilePath: "**/mochawesome.json"
+    files:
+      - "**/*.png"
+      - "**/*.mp4"
+  phases:
+    preTest:
+      commands:
+        - npm install
+        - npm install wait-on
+        - npm install mocha mochawesome mochawesome-merge mochawesome-report-generator
+        - "npm start & npx wait-on http://127.0.0.1:8080"
+    test:
+      commands:
+        - npx cypress run -s cypress/integration/multiply_test.js -r mochawesome --reporter-options "reportDir=cypress/report/mochawesome-report,overwrite=false,html=true,json=true,timestamp=mmddyyyy_HHMMss"
