@@ -51,7 +51,7 @@ class App extends React.Component {
         {this.state.challenge === null ? (
           <div className="App-body"><Scoreboard/>
           <p>
-          <button class="App-buttons" disabled={this.state.loadingChallenge} onClick={() => this.newChallenge() }>
+          <button className="App-buttons" disabled={this.state.loadingChallenge} onClick={() => this.newChallenge() }>
               {this.state.loadingChallenge ? "...generating..." : "NEW CHALLENGE!"}
           </button>
           </p>

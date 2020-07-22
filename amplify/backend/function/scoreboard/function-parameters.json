@@ -1,9 +1,20 @@
 {
-    "permissions": {
-        "storage": {
-            "scoreboard": [
-                "read"
-            ]
-        }
+  "permissions": {
+    "storage": {
+      "scoreboard": [
+        "read"
+      ]
     }
+  },
+  "mutableParametersState": {
+    "permissions": {
+      "storage": {
+        "scoreboard": [
+          "read",
+          "delete"
+        ]
+      }
+    }
+  },
+  "lambdaLayers": []
 }

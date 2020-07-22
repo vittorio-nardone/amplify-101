@@ -7,6 +7,15 @@ import decimal
 dynamodb = boto3.resource('dynamodb')
 scoreboard = dynamodb.Table(os.environ['STORAGE_SCOREBOARD_NAME'])
 
+def reset_scoreboard(username):
+  try:
+    response = scoreboard.delete_item(Key={'username': username})
+  except ClientError as e:
+    print(e.response['Error']['Message'])
+  else:
+    print('Dynamodb response:')
+    print(response)
+
 def get_scoreboard(username):
   try:
     response = scoreboard.get_item(Key={'username': username})
@@ -42,22 +51,34 @@ def handler(event, context):
   print('Received event:')
   print(event)
 
-  results = []
+  if all(k in event for k in ('typeName', 'fieldName', 'identity')):
 
-  if 'identity' in event:
-    if 'username' in event['identity']:
-      scoreboard = get_scoreboard(event['identity']['username'])
-      if scoreboard:
-        print('Scoreboard:')
-        print(scoreboard)
-        for m in sorted(scoreboard.keys(), key=lambda item: int(item)):
-          record = {
-              'multiply': m, 
-              'duration': scoreboard[m]['duration'],
-              'errors': scoreboard[m]['errors'],
-              'when': scoreboard[m]['when']
-          }
-          results.append(record)
+    if (event['typeName'] == 'Query') and (event['fieldName'] == 'getScores'): 
 
-  print(results)
-  return results
+      results = []
+
+      if 'username' in event['identity']:
+        scoreboard = get_scoreboard(event['identity']['username'])
+        if scoreboard:
+          print('Scoreboard:')
+          print(scoreboard)
+          for m in sorted(scoreboard.keys(), key=lambda item: int(item)):
+            record = {
+                'multiply': m, 
+                'duration': scoreboard[m]['duration'],
+                'errors': scoreboard[m]['errors'],
+                'when': scoreboard[m]['when']
+            }
+            results.append(record)
+
+      print(results)
+      return results
+
+    if (event['typeName'] == 'Mutation') and (event['fieldName'] == 'resetScores'): 
+      
+      if 'username' in event['identity']:
+        reset_scoreboard(event['identity']['username'])
+        
+      return []
+
+

@@ -12,7 +12,8 @@ RUN yum -y install \
     libffi-devel \
     make \
     sudo \
-    tar
+    tar \
+    Xvfb
 
 RUN curl -sL https://rpm.nodesource.com/setup_12.x | sudo -E bash -
 RUN sudo yum install -y nodejs

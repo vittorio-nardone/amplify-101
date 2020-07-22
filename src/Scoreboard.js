@@ -2,7 +2,7 @@ import React from 'react';
 import './App.css';
 
 import { getScores }  from './graphql/queries';
-
+import { resetScores } from './graphql/mutations';
 import { API, graphqlOperation } from "aws-amplify";
 
 
@@ -11,6 +11,7 @@ class Scoreboard extends React.Component {
   constructor() {
     super();
     this.state = null;
+    this.resetClick = this.resetClick.bind(this);
   }
 
   componentDidMount() {
@@ -24,12 +25,20 @@ class Scoreboard extends React.Component {
     this.setState({'scores':scores});
   }
 
+  resetClick() {
+    API.graphql(graphqlOperation(resetScores, null))
+      .then(data => {
+        console.log({ data });
+        this.setState({'scores':[]});
+      })
+      .catch(err => console.log('error: ', err));
+  }
+
   epochToDate(epoch) { 
     let aDate = new Date(0);
     aDate.setUTCSeconds(epoch)
     return aDate.toLocaleDateString();
   }
-  
 
   render() {
     return this.state === null ? (
@@ -42,6 +51,7 @@ class Scoreboard extends React.Component {
         (
             <div className="Scoreboard">
             <h1>Your scoreboard</h1>
+
             <table className="ScoreTable">
 
             <thead>
@@ -52,7 +62,6 @@ class Scoreboard extends React.Component {
                 <th>When</th>
                 </tr>
             </thead>
-            
             <tbody>
             {this.state.scores.map(score => {
                     return (
@@ -67,6 +76,9 @@ class Scoreboard extends React.Component {
             }
             </tbody>
             </table> 
+            {this.state.scores.length > 0 ? (
+            <pre><a href="#" onClick={this.resetClick}>RESET SCOREBOARD</a></pre>
+            ) : ( "" )}
             </div>
     );
   }

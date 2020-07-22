@@ -19,4 +19,5 @@ type Query {
 
 type Mutation {
     sendChallengeResults(id: String! results: [Int]): score @function(name: "newChallenge-${env}") 
+    resetScores: [score] @function(name: "scoreboard-${env}") 
 }

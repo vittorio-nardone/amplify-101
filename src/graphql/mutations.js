@@ -12,3 +12,14 @@ export const sendChallengeResults = /* GraphQL */ `
     }
   }
 `;
+export const resetScores = /* GraphQL */ `
+  mutation ResetScores {
+    resetScores {
+      multiply
+      errors
+      duration
+      when
+      pb
+    }
+  }
+`;
