@@ -1,19 +1,40 @@
 
-export const selectors = {
-    // Auth component classes
-    signInSlot: '[slot="sign-in"]',
-    signOutSlot: '[slot="sign-out"]',
-    signInEmailInput: 'input[data-test="sign-in-email-input"]',
-    signInPasswordInput: '[data-test="sign-in-password-input"]',
-    signInSignInButton: '[data-test="sign-in-sign-in-button"]',
-    signOutButton: '[data-test="sign-out-button"]',
+export const labels = {
+    // Auth
+    signInLabel: 'Sign In',
+    signOutLabel: 'Sign Out',
+    signInHeader: 'Sign in to your account',
+    signInResetPassword: 'Reset password',
+    signInCreateAccount: 'Create account',
 
     // Application 
     newChallenge: 'NEW CHALLENGE!',
     submitChallenge: 'SUBMIT',
     backToScoreboard: 'BACK',
-    scoreboard: 'Your scoreboard'
- }
+    scoreboard: 'Your scoreboard',
+    resultNoErrors: '0 error(s)',
+    resetScoreboard: 'RESET SCOREBOARD',
+    congratulations: 'Congratulation!',
+
+    scoreboardTable : {
+      tableOf: 'Table of',
+      record: 'Record (sec)',
+      errors: 'Errors',
+      when: 'When'
+    }
+}
+
+export const selectors = {
+    // Auth component classes
+    signInSlot: '[slot="sign-in"]',
+    signInHeader: '[data-test="sign-in-header-section"]',
+    signInResetPasswordLink: '[data-test="sign-in-forgot-password-link"]',
+    signInCreateAccountLink: '[data-test="sign-in-create-account-link"]',
+    signInEmailInput: '[data-test="sign-in-email-input"]',
+    signInPasswordInput: '[data-test="sign-in-password-input"]',
+    signInSignInButton: '[data-test="sign-in-sign-in-button"]',
+    signOutButton: '[data-test="sign-out-button"]',
+}
 
 export const login = {
     username: Cypress.env('username'),
@@ -21,7 +42,12 @@ export const login = {
 } 
 
 function SignIn() {
-        
+        // it is ok for the username to be visible in the Command Log
+        expect(login.username, 'username was set').to.be.a('string').and.not.be.empty
+        // but the password value should not be shown
+        if (typeof login.password !== 'string' || !login.password) {
+          throw new Error('Missing password value, set using CYPRESS_password=...')
+        }
 
         cy.get(selectors.signInSlot)
           .find(selectors.signInEmailInput, { includeShadowDom: true })
@@ -33,9 +59,8 @@ function SignIn() {
  
         cy.get(selectors.signInSlot)
           .find(selectors.signInSignInButton, { includeShadowDom: true })
-          .contains('Sign In')
+          .contains(labels.signInLabel)
           .click();
-
 };
 
 function setResult(i, multiply) {
@@ -61,25 +86,63 @@ describe('Authenticator:', function() {
     });
     
     describe('Sign In', () => {
+      it('check sign in page', () => {
+        cy.get(selectors.signInSlot)
+        .find(selectors.signInHeader, { includeShadowDom: true })
+        .contains(labels.signInHeader)
+        .should('be.visible');
+
+      cy.get(selectors.signInSlot)
+        .find(selectors.signInResetPasswordLink, { includeShadowDom: true })
+        .contains(labels.signInResetPassword)
+        .should('be.visible');
+
+      cy.get(selectors.signInSlot)
+        .find(selectors.signInCreateAccountLink, { includeShadowDom: true })
+        .contains(labels.signInCreateAccount)
+        .should('be.visible');
+
+      cy.get(selectors.signInSlot)
+        .find(selectors.signInEmailInput, { includeShadowDom: true })
+        .should('be.visible')
+        .should('be.enabled');
+
+      cy.get(selectors.signInSlot)
+        .find(selectors.signInPasswordInput, { includeShadowDom: true })
+        .should('be.visible')
+        .should('be.enabled');
+
+      cy.get(selectors.signInSlot)
+        .find(selectors.signInSignInButton, { includeShadowDom: true })
+        .contains(labels.signInLabel)
+        .should('be.visible');
+      });
+
       it('allows a user to signin', () => {
-        // Step 2: Take an action (Sign in)
+        // Take an action (Sign in)
         SignIn();
 
-        // Step 3: Make an assertion (Check for sign-out text)
-        cy.get(selectors.signOutButton, { includeShadowDom: true, timeout: 10000 }).contains('Sign Out');        
+        // Make an assertion (Check for sign-out text)
+        cy.get(selectors.signOutButton, { includeShadowDom: true, timeout: 10000 })
+            .contains(labels.signOutLabel)
+            .should("be.visible");        
       });
     });
 
     describe('Sign Out', () => {
         it('allows a user to signout', () => {
-          // Step 2: Take an action (Sign in)
+          // Take an action (Sign in)
           SignIn();
 
-          // Step 3: Click on sign-out button
-          cy.get(selectors.signOutButton, { includeShadowDom: true, timeout: 10000 }).contains('Sign Out').click();
+          // Click on sign-out button
+          cy.get(selectors.signOutButton, { includeShadowDom: true, timeout: 10000 })
+            .contains(labels.signOutLabel)
+            .click();
           
-          // Step 4: Make an assertion (Check for sign-in button)
-          cy.get(selectors.signInSlot).find(selectors.signInSignInButton, { includeShadowDom: true }).contains('Sign In');
+          // Make an assertion (Check for sign-in button)
+          cy.get(selectors.signInSlot).find(selectors.signInSignInButton, { includeShadowDom: true })
+            .contains(labels.signInLabel)
+            .should("be.visible");
         });
       });
  
@@ -87,55 +150,51 @@ describe('Authenticator:', function() {
 
 
   describe('Challenges:', function() {
-    // Step 1: setup the application state
     beforeEach(function() {
       cy.visit('/');
-      // Step 2: Take an action (Sign in)
       SignIn();
-
-      // Step 3: Make an assertion (Check for sign-out text)
-      cy.get(selectors.signOutButton, { includeShadowDom: true, timeout: 10000 }).contains('Sign Out');        
-
+      cy.get(selectors.signOutButton, { includeShadowDom: true, timeout: 10000 })
+        .contains(labels.signOutLabel)
+        .should("be.visible");        
     });
-
 
     describe('New Challenge', () => {
       it('start a new challenge', () => {
-        cy.contains(selectors.newChallenge).click();
-        cy.contains(selectors.submitChallenge); 
+        cy.contains(labels.newChallenge).click();
+        cy.contains(labels.submitChallenge).should("be.visible"); 
       });
 
       it('submit a new challenge', () => {
-        cy.contains(selectors.newChallenge).click();
-        cy.contains(selectors.submitChallenge).click();
-        cy.contains(selectors.backToScoreboard);
+        cy.contains(labels.newChallenge).click();
+        cy.contains(labels.submitChallenge).click();
+        cy.contains(labels.backToScoreboard).should("be.visible");
       });     
 
       it('back to scoreboard', () => {
-        cy.contains(selectors.newChallenge).click();
-        cy.contains(selectors.submitChallenge).click();
-        cy.contains(selectors.backToScoreboard).click();
-        cy.contains(selectors.scoreboard);
+        cy.contains(labels.newChallenge).click();
+        cy.contains(labels.submitChallenge).click();
+        cy.contains(labels.backToScoreboard).click();
+        cy.contains(labels.scoreboard).should("be.visible");
       });   
 
       it('fill a perfect challenge', () => {
-        cy.contains(selectors.newChallenge).click();
-        cy.contains(selectors.submitChallenge);
+        cy.contains(labels.newChallenge).click();
+        cy.contains(labels.submitChallenge).should("be.visible");
 
         var i;
         for (i = 1; i < 11; i++) {
             cy.get('tbody > :nth-child(' + String(i) + ') > :nth-child(1) > b').then(setResult.bind(null, i)) 
         };
         
-        cy.contains(selectors.submitChallenge).click();
-        cy.contains(selectors.backToScoreboard);
-        cy.contains('0 error(s)');  
+        cy.contains(labels.submitChallenge).click();
+        cy.contains(labels.backToScoreboard).should("be.visible");
+        cy.contains(labels.resultNoErrors).should("be.visible");;  
         
       });   
 
       it('fill a challenge with errors', () => {
-        cy.contains(selectors.newChallenge).click();
-        cy.contains(selectors.submitChallenge);
+        cy.contains(labels.newChallenge).click();
+        cy.contains(labels.submitChallenge);
 
         var errors = Math.floor(Math.random() * 10) + 1;
 
@@ -148,9 +207,9 @@ describe('Authenticator:', function() {
             cy.get('tbody > :nth-child(' + String(i) + ') > :nth-child(1) > b').then(setResult.bind(null, i)) 
         };
         
-        cy.contains(selectors.submitChallenge).click();
-        cy.contains(selectors.backToScoreboard);
-        cy.contains(String(errors) + ' error(s)');  
+        cy.contains(labels.submitChallenge).click();
+        cy.contains(labels.backToScoreboard).should("be.visible");;
+        cy.contains(String(errors) + ' error(s)').should("be.visible");;  
         
       });   
       
@@ -160,54 +219,54 @@ describe('Authenticator:', function() {
 
   describe('Scoreboard:', function() {
 
-    // Step 1: setup the application state
+    // Setup the application state
     beforeEach(function() {
       cy.visit('/');
-      // Step 2: Take an action (Sign in)
       SignIn();
-
-      // Step 3: Make an assertion (Check for sign-out text)
-      cy.get(selectors.signOutButton, { includeShadowDom: true, timeout: 10000 }).contains('Sign Out');        
-
+      cy.get(selectors.signOutButton, { includeShadowDom: true, timeout: 10000 })
+        .contains(labels.signOutLabel)
+        .should("be.visible");   
     });
 
     describe('Check Scoreboard', () => {
       it('check if scoreboard is shown', () => {
         
-        cy.contains('Table of'); 
-        cy.contains('Record (sec)'); 
-        cy.contains('Errors');
-        cy.contains('When');
+        cy.contains(labels.scoreboardTable.tableOf).should("be.visible"); 
+        cy.contains(labels.scoreboardTable.record).should("be.visible"); 
+        cy.contains(labels.scoreboardTable.errors).should("be.visible");
+        cy.contains(labels.scoreboardTable.when).should("be.visible");
       });
 
       it('check if reset scoreboard is shown', () => {
         cy.get('.ScoreTable').then(($table) => {
             if ($table.find('tr').length < 2) {
-              cy.contains(selectors.newChallenge).click();
-              cy.contains(selectors.submitChallenge).click();
-              cy.contains(selectors.backToScoreboard).click();
-              cy.contains(selectors.scoreboard);
+              cy.contains(labels.newChallenge).click();
+              cy.contains(labels.submitChallenge).click();
+              cy.contains(labels.backToScoreboard).click();
+              cy.contains(labels.scoreboard);
             }
-            cy.contains('RESET SCOREBOARD');
+            cy.contains(labels.resetScoreboard)
+            .should("be.visible");
         }) 
       });
 
       it('check if reset scoreboard is doing the right job', () => {
         cy.get('.ScoreTable').then(($table) => {
             if ($table.find('tr').length < 2) {
-              cy.contains(selectors.newChallenge).click();
-              cy.contains(selectors.submitChallenge).click();
-              cy.contains(selectors.backToScoreboard).click();
-              cy.contains(selectors.scoreboard);
+              cy.contains(labels.newChallenge).click();
+              cy.contains(labels.submitChallenge).click();
+              cy.contains(labels.backToScoreboard).click();
+              cy.contains(labels.scoreboard);
             }  
            
-            cy.contains('RESET SCOREBOARD')
+            cy.contains(labels.resetScoreboard)
               .click()
               .then(() => {
                 cy.wait(2000);
                 cy.get('.ScoreTable').then(($table) => {
                   expect($table.find('tr').length).to.equal(1);
                 }) 
+                cy.contains(labels.resetScoreboard).should("not.exist");
               });
         }) 
 
@@ -219,31 +278,29 @@ describe('Authenticator:', function() {
 
     describe('Results:', function() {
 
-    // Step 1: setup the application state
+    // Setup the application state
     beforeEach(function() {
       cy.visit('/');
-      // Step 2: Take an action (Sign in)
       SignIn();
-
-      // Step 3: Make an assertion (Check for sign-out text)
-      cy.get(selectors.signOutButton, { includeShadowDom: true, timeout: 10000 }).contains('Sign Out');        
-
+      cy.get(selectors.signOutButton, { includeShadowDom: true, timeout: 10000 })
+        .contains(labels.signOutLabel)
+        .should("be.visible");   
     });
 
     describe('Check Results', () => {
-      it('check if congratulations is showN', () => {
+      it('check if congratulations is shown', () => {
           cy.get('.ScoreTable').then(($table) => {
               if ($table.find('tr').length > 1) {
-                cy.contains('RESET SCOREBOARD')
+                cy.contains(labels.resetScoreboard)
                 .click()
                 .then(() => {
                   cy.wait(2000);
                 });
               }
                 
-              cy.contains(selectors.newChallenge).click();
-              cy.contains(selectors.submitChallenge).click();
-              cy.contains('Congratulation!');
+              cy.contains(labels.newChallenge).click();
+              cy.contains(labels.submitChallenge).click();
+              cy.contains(labels.congratulations);
           });
       });
     });
