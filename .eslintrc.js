@@ -21,4 +21,9 @@ module.exports = {
     "require-jsdoc": "off",
     "react/prop-types": "off"
   },
+  'settings': {
+    "react": {
+      "version": "detect"
+    }
+  }
 };
