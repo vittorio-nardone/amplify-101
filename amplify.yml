@@ -25,7 +25,7 @@ frontend:
         - npm ci
     build:
       commands:
-        # - eslint src/*.js 
+        - npx eslint src/*.js 
         - npm run build
   artifacts:
     baseDirectory: build
