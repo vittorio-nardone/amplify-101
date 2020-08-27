@@ -32,7 +32,7 @@ RUN cd /tmp && sudo tar xzf Python-3.8.1.tgz
 WORKDIR /tmp/Python-3.8.1/
 RUN sudo ./configure --enable-optimizations
 RUN sudo make altinstall
-RUN pip3.8 install --user pipenv
+RUN pip3.8 install --user pipenv pylint
 RUN ln -fs /usr/local/bin/python3.8 /usr/bin/python3
 RUN ln -fs /usr/local/bin/pip3.8 /usr/bin/pip3
 RUN echo "export PATH=/root/.local/bin:${PATH}" >> /root/.bashrc
