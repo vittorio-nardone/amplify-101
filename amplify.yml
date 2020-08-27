@@ -16,6 +16,8 @@ backend:
     #     - cd $BASE_PATH
     build:
       commands:
+        - '# Evaluate backend Python code quality'
+        - find amplify/backend/function -name index.py -type f | xargs pylint --fail-under=5 --rcfile=pylint.rc 
         - '# Execute Amplify CLI with the helper script'
         - amplifyPush --simple
 frontend:
