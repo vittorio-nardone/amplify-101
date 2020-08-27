@@ -38,4 +38,13 @@ docker run -it vnardone/amplify-python38 bash
 # Use as base image
 FROM vnardone/amplify-python38:latest
 ```
+## Cypress End to End testing
 
+[Cypress](https://www.cypress.io/) is used in CI pipeline to perform end to end testing of Amplify application.
+Configuration file [cypress.json](./cypress.json) add shadow DOM support. 
+
+Tests are defined in [multiply_test.js](./cypress/integration/multiply_test.js).
+CI test phase is defined in [amplify.yml](./amplify.yml) configuration file.
+
+
+<a href="./cypress/videos/multiply_test.js.mp4" title="CI Test phase video"><img src="./cypress/videos/multiply_test-js-preview.png" alt="CI Test phase video" width="80%"  /></a>
