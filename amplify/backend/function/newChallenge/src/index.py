@@ -86,13 +86,15 @@ def select_from_scoreboard(scoreboard):
     s = [k for k in range(2, 11) if not (str(k) in scoreboard)]
     if len(s) > 0:
         m = random.choice(s)
+        pb = 0
     else:
         s = [[k, scoreboard[k]['duration'], scoreboard[k]['errors']]
              for k in scoreboard]
         s = [int(v[0])
              for v in sorted(s, key=lambda item: item[1] + item[2]*20)]
         m = random.choice(s[-4:])
-    return m
+        pb = scoreboard[str(m)]['duration']
+    return m, pb
 
 
 def create_challenge(multiply):
@@ -157,8 +159,8 @@ def handler(event, context):
             if (event['typeName'] == 'Query') and (event['fieldName'] == 'getChallenge'):
                 challenge = {}
 
-                multiply = select_from_scoreboard(scoreboard)
-                challenge = {'multiply': multiply}
+                multiply, personal_best = select_from_scoreboard(scoreboard)
+                challenge = {'multiply': multiply, 'personal_best': personal_best}
 
                 challenge['challenge'], results = create_challenge(multiply)
                 challenge['id'] = save_challenge(

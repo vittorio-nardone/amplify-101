@@ -3,6 +3,7 @@ import './App.css';
 import pb from './pb.png';
 import {API, graphqlOperation} from 'aws-amplify';
 import {sendChallengeResults} from './graphql/mutations';
+import TimeCounter from "./TimeCounter";
 
 class Challenge extends React.Component {
   constructor(props) {
@@ -50,9 +51,9 @@ class Challenge extends React.Component {
                 <p>It&apos;s your new personal best!</p>
               </div>
             ) : (<p><h1>Results</h1>Hmm, not your best.</p>)}
-              <p>You did it in
-                <b>{this.state.score.duration}</b> seconds and
-                <b>{this.state.score.errors}</b> error(s).
+              <p>You did it in 
+                <b> {this.state.score.duration}</b> seconds and 
+                <b> {this.state.score.errors}</b> error(s).
               </p>
               <button className="App-buttons" onClick = {this.props.onFinish}>
                 BACK
@@ -103,6 +104,7 @@ class Challenge extends React.Component {
                     {this.state.loadingResults ? '...checking...' : 'SUBMIT'}
                   </button>
                 </p>
+                <div class="App-footer" style={{ fontSize: 28 }}><b>time:</b> <TimeCounter/> - <b>personal best:</b> {this.props.challenge.personal_best === 0 ? ("none") : (this.props.challenge.personal_best)}</div>
               </form>
             </div>
     );

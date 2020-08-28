@@ -10,6 +10,7 @@ type challenge {
   id: String!
   multiply: Int!
   challenge: [Int]!
+  personal_best: Int!
 }
 
 type Query {

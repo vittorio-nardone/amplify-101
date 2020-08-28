@@ -18,6 +18,7 @@ export const getChallenge = /* GraphQL */ `
       id
       multiply
       challenge
+      personal_best
     }
   }
 `;

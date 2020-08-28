@@ -82,7 +82,7 @@
 				"Timeout": "25",
 				"Code": {
 					"S3Bucket": "amplify-amplify101-dev-111033-deployment",
-					"S3Key": "amplify-builds/scoreboard-6d5a437749584c2b6457-build.zip"
+					"S3Key": "amplify-builds/scoreboard-70746f454e676b64416e-build.zip"
 				},
 				"Layers": []
 			}

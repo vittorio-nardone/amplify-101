@@ -96,7 +96,7 @@
 				"Timeout": "25",
 				"Code": {
 					"S3Bucket": "amplify-amplify101-dev-111033-deployment",
-					"S3Key": "amplify-builds/newChallenge-687a633651347a387778-build.zip"
+					"S3Key": "amplify-builds/newChallenge-7654444259787359542b-build.zip"
 				}
 			}
 		},
